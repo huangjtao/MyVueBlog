@@ -1,0 +1,41 @@
+解决ElementUI自定义CSS样式不生效的问题
+例如有一个输入框
+
+<el-input
+        ref="mysearch"
+        class="mysearch"
+        size="small"
+        placeholder="请输入内容"
+        suffix-icon="el-icon-search"
+        v-model="input1">
+</el-input>
+如果没有加自定义样式则输入框大概是这样的
+
+我希望是这样的
+<--圆角-->
+通过谷歌浏览器的开发者工具，找到对应样式的类名为.el-input__inner
+但发现再html中前面的el-input标签解析成了这个，其中mysearch是自己添加上去的，
+因此我们可以找到mysearch的元素，需要修改的是子元素类名是.el-input__inner
+
+
+如果之间通过css的选择器选择子元素则不能作用到子内部的元素
+下面使用了stylus语法的写法
+下面是错误的写法：
+
+<style scoped lang="stylus" rel="stylessheet/stylus">
+    .mysearch .el-input__inner
+        border-radius 20px
+</style>
+让其生效的方法
+
+方案一：需要中间加一个/deep/才能访问到深层样式
+
+<style scoped lang="stylus" rel="stylessheet/stylus">
+    .mysearch /deep/ .el-input__inner
+        border-radius 20px
+</style>
+方案二：去掉scoped，这种方式能达到效果但不建议使用！
+
+总的来说之所以不能生效就是这个scope导致作用范围不能作用到内部的子组件，解决问题的最后方法是通过加/deep/使其能作用到子组件中
+
+到此这篇关于elementui自定义css样式不生效的解决方案的文章就介绍到这了,更多相关elementui样式不生效内容请搜索以前的文章或继续浏览下面的相关文章，希望大家以后多多支持！
