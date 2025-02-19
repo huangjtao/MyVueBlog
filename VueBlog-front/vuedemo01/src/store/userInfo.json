@@ -1,0 +1,16 @@
+{
+    "userId": "a",
+    "userUid": "a",
+    "userName": "admin",
+    "userPass": "123456",
+    "userNickname": "Tao",
+    "userEmail": "admin@admin.com",
+    "userIntro": "http://111.196.145.99:8888",
+    "userAvatar": "/static/upload/user/fb401b45-9ebb-495f-a42e-7dbc4c5e33dd.jpg",
+    "userLastLoginIp": "0:0:0:0:0:0:0:1",
+    "userRegisterTime": "2017-10-06 21:56:33",
+    "userLastLoginTime": "2019-04-25 21:55:53",
+    "userStatus": 1,
+    "userSex": "男",
+    "userPhone": "88888888"
+}

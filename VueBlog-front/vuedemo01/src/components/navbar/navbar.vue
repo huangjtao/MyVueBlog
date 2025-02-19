@@ -22,13 +22,17 @@
             <el-menu-item style="float: right;" v-if="IsLogin">
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link">
-                        <el-avatar :src="userInfo.userAvatar"></el-avatar>
+                        <el-avatar :src="userInfo.userAvatar == null ? defaultTx : userInfo.userAvatar"></el-avatar>
                         <span>{{ userInfo.userName }}</span>
                     </span>
                     <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item @click="showUserInfo">个人信息</el-dropdown-item>
-                        <el-dropdown-item @click="updateUserInfo">修改密码</el-dropdown-item>
-                        <el-dropdown-item @click="exitLogin">退出</el-dropdown-item>
+                        <el-dropdown-item @click.native="showUserInfo">
+                            <el-badge :value="12" class="item">
+                                <span>个人中心</span>
+                            </el-badge>
+                        </el-dropdown-item>
+                        <el-dropdown-item @click.native="updateUserInfo">修改密码</el-dropdown-item>
+                        <el-dropdown-item @click.native="exitLogin">退出</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
             </el-menu-item>
@@ -48,20 +52,28 @@
             <!-- <el-menu-item index="4"><a href="" target="_blank">订单管理</a></el-menu-item>
             <el-menu-item index="3" disabled>消息中心</el-menu-item> -->
         </el-menu>
+        <updateUserPass v-if="dialogFormVisible" ref="updateUserPass"></updateUserPass>
     </div>
 </template>
 
 <script>
 import store from '../../store';
+import updateUserPass from '../../views/userInfo/userInfoUpdate.vue'
 
 export default {
     name: "NavBar",
+    components: {
+        updateUserPass
+    },
     data() {
         return {
             // activeIndex: '',
             state: "",
             IsLogin: false,
             userInfo: {},
+            defaultTx: require('@/styles/pic/avatar.jpg'),
+
+            dialogFormVisible: false,   //控制修改密码弹出框
         };
     },
     mounted() {
@@ -99,14 +111,19 @@ export default {
             npm install vuex@3.6.2 --save
              */
             const user = this.$store.getters.getUser;
-            console.log("userInfo=", user)
-            if (user != '') {
+            if (user != null) {
                 this.IsLogin = true;
                 this.userInfo = user;
+                console.log("userInfo=true,用户登录成功")
             }
         },
-        showUserInfo() { },
-        updateUserInfo() { },
+        showUserInfo() { this.$router.push({ path: '/userInfoView' }) },
+        updateUserInfo() {
+            this.dialogFormVisible = true;
+            this.$nextTick(() => {
+                this.$refs.updateUserPass.init(this.userInfo.userName);
+            })
+        },
         exitLogin() {
             this.$store.commit("REMOVE_INFO")
             this.$router.push({ path: '/login' })
@@ -114,26 +131,27 @@ export default {
     }
 }
 </script>
-<style slot-scope>
-.el-input__inner {
+<style scoped>
+.el-input /deep/ .el-input__inner {
     border-radius: 20px;
 }
 
-.el-button.is-round {
+.el-menu-item /deep/ .el-button.is-round {
     border-radius: 30px;
     padding: 12px 5px;
 }
 
-.el-menu-item .el-button i {
+.el-menu-item /deep/ .el-button.is-round i.el-icon-circle-plus-outline {
     color: white;
     margin-right: 0px;
 }
 
-.el-menu-item .el-button span {
+
+.el-menu-item /deep/ .el-button.is-round span {
     margin-left: 0px;
 }
 
-.el-menu-demo .el-menu-item a {
+.el-menu-demo /deep/ .el-menu-item /deep/ a {
     text-decoration: none;
 }
 </style>

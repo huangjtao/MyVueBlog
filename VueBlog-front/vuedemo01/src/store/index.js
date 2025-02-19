@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: '',
-    userInfo: JSON.parse(sessionStorage.getItem("userInfo"))
+    userInfo: JSON.parse((sessionStorage.getItem("userInfo") == "undefined" ? null : sessionStorage.getItem("userInfo")))
   },
   mutations: {
     // set
@@ -22,7 +22,8 @@ export default new Vuex.Store({
       state.token = ''
       state.userInfo = {}
       localStorage.setItem("token", '')
-      sessionStorage.setItem("userInfo", JSON.stringify(''))
+      // sessionStorage.setItem("userInfo", JSON.stringify(''))
+      sessionStorage.removeItem("userInfo")
     }
 
   },

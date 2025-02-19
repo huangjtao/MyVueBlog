@@ -23,6 +23,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     // allow async-await
+    'space-before-function-paren': 0,
     'generator-star-spacing': 'off',
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -31,9 +32,9 @@ module.exports = {
     'comma-dangle': 0,
     'no-trailing-spaces': 0,
     'eol-last': 0,
-    'space-before-function-paren': 0,
     // allow paren-less arrow functions
     'arrow-parens': 0,
+    'no-unused-vars': 'off',
     "no-unused-vars": [2, {
       // 允许声明未使用变量
       "vars": "local",

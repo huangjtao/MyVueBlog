@@ -12,6 +12,8 @@ import axios from 'axios';
 import './axios';
 import uploader from 'vue-simple-uploader'
 Vue.use(uploader)
+import qs from 'qs'
+Vue.prototype.$qs = qs
 
 import jquery from 'jquery'
 Vue.prototype.$ = jquery
@@ -26,8 +28,9 @@ import swal from 'sweetalert';
 //时间日期格式化
 import moment from 'moment'
 
-import '@/styles/yhbackground.js'
+//import '@/styles/yhbackground.js'
 // import '@/styles/autoload/autoload.js'
+import '@/styles/axbackground/axbackground.js'
 
 Vue.config.productionTip = false;
 Vue.prototype.$axios = axios;
@@ -39,3 +42,4 @@ new Vue({
   store,
   render: h => h(App)
 })
+

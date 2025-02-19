@@ -19,26 +19,73 @@
                             <!-- art列表信息 -->
                             <el-card class="box-card" v-for="(artinfo, index) in artList.list" :key="artinfo.articleId"
                                 style="margin-bottom: 10px;">
-                                <div class="art-title" style="margin-bottom: 5px;">
-                                    <el-link type="warning" @click="toArticleDetails(artinfo.articleId)"
-                                        style="font-size: larger; font-weight: 600;">{{
-                                            artinfo.articleTitle }}</el-link>
-                                </div>
-                                <a class="art-content">
-                                    <div class="markdown-body" v-html="artinfo.articleContent"></div>
-                                </a>
-                                <div class="art-other">
-                                    <el-link :underline="false"> {{ artinfo.user.userName }} </el-link>
-                                    <el-link :underline="false" style="margin-left: 20px;">{{ artinfo.articleCreateTime
-                                    }}</el-link>
-                                    <el-link :underline="false" style="margin-left: 20px;font-size: 10px;"><i
-                                            class="el-icon-view"></i>
-                                        {{ artinfo.articleViewCount }}</el-link>
-                                    <el-link :underline="false" style="margin-left: 20px;font-size: 10px;"><i
-                                            class="el-icon-chat-dot-square"></i>{{ artinfo.articleCommentCount }}</el-link>
-                                    <el-link :underline="false" style="margin-left: 20px;font-size: 10px;"
-                                        @click="StariconOn"><i :class="iconOff"></i>
-                                        {{ artinfo.articleLikeCount }}</el-link>
+                                <div style="display: flex;">
+                                    <div v-if="artinfo.articleFmpic" style="float: left;margin-right: 20px;">
+                                        <el-avatar shape="square" :size="100" :src="artinfo.articleFmpic"></el-avatar>
+                                    </div>
+                                    <div>
+                                        <div class="art-title" style="margin-bottom: 5px;">
+                                            <el-link type="warning" @click="toArticleDetails(artinfo.articleId)"
+                                                style="font-size: larger; font-weight: 600;">{{
+                                                    artinfo.articleTitle }}</el-link>
+                                        </div>
+                                        <a class="art-content">
+                                            <!-- <div class="markdown-body" v-html="(artinfo.articleContent).substring(0, 100)"> -->
+                                            <div style="font:14px/normal Arial,Helvetica,Sans-Serif;color: #71777d;line-height: 22px;">
+                                                {{ artinfo.articleContentTxt |  ellipsis }}
+                                            </div>
+                                        </a>
+                                        <div class="art-other">
+                                            <div style="display: flex;">
+                                                <ul style="list-style-type: none;padding: 0;margin-bottom: 0;">
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconUser.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>{{ artinfo.user.userName }}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconClock.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>
+                                                                {{ artinfo.articleCreateTime }}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconViewBlack.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>{{ artinfo.articleViewCount }}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconCommentBlack.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>{{ artinfo.articleCommentCount }}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconStarBlack.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>{{ artinfo.articleStarCount }}</span>
+                                                        </a>
+                                                    </li>
+                                                    <li style="float: left;margin-right: 20px;">
+                                                        <a style="display: flex; align-items: center;">
+                                                            <img src="../../assets/iconLikeBlack.png"
+                                                                style="height: 24px;width: 24px;margin-right: 4px;" />
+                                                            <span>{{ artinfo.articleLikeCount }}</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </el-card>
                             <!-- 分页信息 -->
@@ -57,14 +104,20 @@
                 <aside class="rightSide">
                     <el-card class="box-card" align="center" style="line-height: 1.5;">
                         <div class="author-avat">
-                            <el-image style="width: 100px; height: 100px" :src="currUser.userAvatar" :fit="fit">
+                            <el-image style="width: 100px; height: 100px" :src="currUser.userAvatar== null ? require('@/styles/pic/avatar.jpg') : currUser.userAvatar" :fit="fit">
                             </el-image>
                         </div>
 
-                        <a class="">{{ currUser.userName }}</a>
-                        <div><span>入驻时间: {{ rzTime }} </span></div>
-                        <div><span>原创 7 </span></div>
-                        <div><span>个人简介：{{ currUser.userIntro }}</span></div>
+                        <a class="" v-if="currUser.userName == null"> Tao </a>
+                        <a class="" v-else>{{ currUser.userName }}</a>
+                        <div><span v-if="rzTime == ''">入驻时间: 2021-08-08 </span>
+                            <span v-else>入驻时间: {{ rzTime }} </span>
+                        </div>
+                        <div><span>原创: 待统计... </span></div>
+                        <div>
+                            <span v-if="currUser.userIntro == null">个人简介: 莫待无花空折枝。</span>
+                            <span v-else>个人简介: {{ currUser.userIntro }}</span>
+                        </div>
                     </el-card>
                     <el-card style="margin-top: 20px;">
                         <el-calendar v-model="rlvalue" class="rlSelect">
@@ -112,10 +165,10 @@ export default {
             fit: "cover",
 
             artList: {
-                total: 0,
+                total: 0, //总数
                 list: [],
-                pageNum: 1,
-                pageSize: 10,
+                pageNum: 1,  //默认页
+                pageSize: 10,  //默认条数
                 size: 10,
                 startRow: 1,
                 endRow: 10,
@@ -140,6 +193,9 @@ export default {
             rzTime: '',
         };
     },
+    created() {
+        this.getSessionPageNum();
+    },
     mounted() {
         // this.HandleTextZs();
         this.getAllArtInfo();
@@ -159,14 +215,16 @@ export default {
             }
             this.$axios.post('/article/findAllByPage', param).then((response) => {
                 if (response.data.total > 0) {
-                    console.log("res=", response)
+                    // console.log("res=", response)
                     // this.artList = [];
                     // console.log("qk=", this.artList)
                     this.artList = response.data;
-                    console.log("artList=", this.artList)
+                    // console.log("artList=", this.artList)
                 } else {
                     console.log(err)
                 }
+                //返回列表页，查询成功之后清除
+                window.sessionStorage.removeItem("pageNum");
             })
         },
         //当点击下一页，上一页，去到第几页时触发
@@ -184,7 +242,7 @@ export default {
         },
         currentLoginUser() {
             const user = this.$store.getters.getUser;
-            if (user != '') {
+            if (user != null) {
                 this.currUser = user;
                 //计算时间差，返回天数
                 // let currentDateTime = new Date();
@@ -195,8 +253,17 @@ export default {
             }
         },
         toArticleDetails(articleId) {
-            this.$router.push({ name: 'articledetails', query: { articleId: articleId } })
-        }
+            this.$router.push({ name: 'articledetails', query: { articleId: articleId } });
+            window.sessionStorage.setItem("skipFlag", 1);
+            window.sessionStorage.setItem("pageNum", this.artList.pageNum);
+        },
+
+        getSessionPageNum() {
+            let pageNum = Number(window.sessionStorage.getItem("pageNum"));
+            if (pageNum != "") {
+                this.artList.pageNum = pageNum;
+            }
+        },
         // HandleTextZs() {
         //     //限制字符个数
         //     $(".art-content").each(function () {
@@ -208,7 +275,21 @@ export default {
         //     });
         // }
 
-    }
+        likeCount(articleId) {
+            this.artList.articleLikeCount += 1;
+        }
+    },
+    //vue 过滤器
+    filters: {
+        //限制显示210字符
+        ellipsis(value) {
+            if (!value) return ''
+            if (value.length > 210) {
+                return value.slice(0, 210) + '...'
+            }
+            return value;
+        }
+    },
 };
 
 </script>
@@ -255,6 +336,11 @@ a {
 .rlSelect /deep/ .el-calendar-day {
     padding: 5px;
     height: 30px;
+    text-align: center;
+}
+
+.rlSelect /deep/ .el-calendar__header {
+    padding: 12px 10px;
 }
 
 // 不生效   解决办法 ↑
@@ -282,14 +368,14 @@ a {
 .art-content {
     font-size: 12px;
     line-height: 20px;
-    /* 限制内容显示两行 */
+    /* 限制内容显示3行 */
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: normal;
     word-break: break-word;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
 }
 
 .el-card__header {

@@ -32,7 +32,8 @@
               <span style="font-weight: 600;">
                 UserName or Email Address
               </span>
-              <el-input id="inputAccount" ref="username" v-model="loginForm.username" autocomplete="off"></el-input>
+              <el-input id="inputAccount" ref="username" v-model="loginForm.username" autocomplete="off"
+                clearable></el-input>
             </el-form-item>
 
             <el-form-item prop="password">
@@ -42,10 +43,11 @@
               <a style="float: right;font-weight: 600;cursor: pointer;" @click="ToRegister">Forget Password?</a>
               <!-- <el-input type="password" :key="passwordType" ref="password" v-model="loginForm.password"
                 autocomplete="off"> -->
-              <el-input :type="passwordType" ref="password" v-model="loginForm.password" autocomplete="off">
-                <i class="el-icon-close el-input__icon" slot="suffix" @click="clearInput"></i>
-                <i class="el-icon-view el-input__icon" slot="suffix" @click="showPwd">
-                </i>
+              <el-input :type="passwordType" ref="password" v-model="loginForm.password" autocomplete="off"
+                @keyup.enter.native="handleLogin" clearable show-password>
+                <!-- <i class="el-icon-close el-input__icon" slot="suffix" @click="clearInput"></i> -->
+                <!-- <i class="el-icon-view el-input__icon" slot="suffix" @click="showPwd"> -->
+                <!-- </i> -->
               </el-input>
             </el-form-item>
             <div>
@@ -112,17 +114,17 @@ export default {
   methods: {
     // 注册业务
     ToRegister() { this.$router.push("/register") },
-    clearInput() { this.loginForm.password = "" },
-    showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = 'text'
-      } else {
-        this.passwordType = 'password'
-      }
-      this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
-    },
+    // clearInput() { this.loginForm.password = "" },
+    // showPwd() {
+    //   if (this.passwordType === 'password') {
+    //     this.passwordType = 'text'
+    //   } else {
+    //     this.passwordType = 'password'
+    //   }
+    //   this.$nextTick(() => {
+    //     this.$refs.password.focus()
+    //   })
+    // },
     // 登录业务
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
@@ -165,7 +167,14 @@ export default {
                 */
                 _this.$store.commit("SET_TOKEN", token);
                 _this.$store.commit("SET_USERINFO", userInfo);
-                _this.$router.push({ path: '/home' });
+                // _this.$router.push({ path: '/home' });
+                let redirect=sessionStorage.getItem("redirect");
+                if (redirect!=null) { //如果存在参数
+                  sessionStorage.removeItem("redirect");
+                  _this.$router.push(redirect)//则跳转至进入登录页前的路由
+                } else {
+                  _this.$router.push({ path: '/home' });//否则跳转至首页
+                }
                 this.loading = false;
               }
             }).catch(() => {
@@ -201,8 +210,14 @@ export default {
   .left-container {
     width: 40%;
     height: 100%;
-    background-color: #f1cdd7;
+    //background-color: #f1cdd7;
     // display: none;
+    background: #ff6e7f;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #bfe9ff, #ff6e7f);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #bfe9ff, #ff6e7f);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   }
 }
 

@@ -20,6 +20,7 @@
     "mavon-editor": "^2.10.4",
     "moment": "^2.29.4",
     "sweetalert": "^2.1.2",
+    "turndown": "^7.1.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-simple-uploader": "^0.7.6",
